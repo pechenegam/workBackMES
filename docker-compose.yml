@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      # POSTGRES_DB: root
+      # POSTGRES_DB: aggdbagreements
+      POSTGRES_DB: myname
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
