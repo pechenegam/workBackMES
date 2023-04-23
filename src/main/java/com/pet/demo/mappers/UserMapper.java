@@ -27,6 +27,5 @@ public interface UserMapper {
     @Mapping(source = "team.unitHead", target = "unitHead")
     @Mapping(source = "team.unitName", target = "unitName")
     @Mapping(source = "team.id", target = "teamId")
-//    @Mapping(source = "team.unitName", target = "unitName")
     UserTeamCommonResponse destinationToSourceCommon(User destination);
 }

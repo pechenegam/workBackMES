@@ -18,7 +18,6 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
-
     @Column(unique = true)
     private String username;
 
