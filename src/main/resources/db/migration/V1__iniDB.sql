@@ -18,16 +18,24 @@ CREATE TABLE teams
   (
      id           BIGSERIAL NOT NULL,
      created_date TIMESTAMP,
+     delete_date  TIMESTAMP,
      updated_date TIMESTAMP,
      unit_name    VARCHAR(255),
      unit_head_id INT8,
      PRIMARY KEY (id)
   );
 
+CREATE TABLE teams_users
+  (
+     team_id  INT8 NOT NULL,
+     users_id INT8 NOT NULL
+  );
+
 CREATE TABLE users
   (
      id           BIGSERIAL NOT NULL,
      created_date TIMESTAMP,
+     delete_date  TIMESTAMP,
      updated_date TIMESTAMP,
      email        VARCHAR(255),
      first_name   VARCHAR(255),

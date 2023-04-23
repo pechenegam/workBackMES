@@ -1,6 +1,7 @@
 package com.pet.demo.controller;
 
 import com.pet.demo.dto.request.LoginRequest;
+import com.pet.demo.dto.request.RegistrationRequest;
 import com.pet.demo.dto.request.TokenRefreshRequest;
 import com.pet.demo.dto.response.JwtResponse;
 import com.pet.demo.dto.response.TokenRefreshResponse;
@@ -22,6 +23,11 @@ public class AuthController {
     @PostMapping("/sign-in")
     public JwtResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return refreshTokenService.authenticateUser(loginRequest);
+    }
+
+    @PostMapping("/sign-up")
+    public JwtResponse registrationUser(@Valid @RequestBody RegistrationRequest registrationRequest) {
+        return refreshTokenService.registrationUser(registrationRequest);
     }
 
     @PostMapping("/refresh")

@@ -1,28 +1,35 @@
 package com.pet.demo.security.services;
 
 import com.pet.demo.dto.request.LoginRequest;
+import com.pet.demo.dto.request.RegistrationRequest;
 import com.pet.demo.dto.request.TokenRefreshRequest;
 import com.pet.demo.dto.response.JwtResponse;
 import com.pet.demo.dto.response.TokenRefreshResponse;
 import com.pet.demo.entity.RefreshToken;
+import com.pet.demo.entity.Role;
+import com.pet.demo.entity.User;
 import com.pet.demo.exception.EntityNotFoundException;
 import com.pet.demo.exception.TokenRefreshException;
 import com.pet.demo.repository.RefreshTokenRepository;
+import com.pet.demo.repository.RoleRepository;
 import com.pet.demo.repository.UserRepository;
 import com.pet.demo.security.jwt.JwtUtils;
+import com.pet.demo.utils.ERole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +46,9 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
@@ -96,4 +106,33 @@ public class RefreshTokenService {
         return token;
     }
 
+    @Transactional
+    public JwtResponse registrationUser(RegistrationRequest signupRequest) {
+        if (isUserNameAlreadyExists(signupRequest) || isEmailAlreadyExists(signupRequest)){
+            throw new RuntimeException("username or email already in use");
+        }
+
+        User user = new User();
+        user.setUsername(signupRequest.getUsername());
+        user.setEmail(signupRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByName(ERole.ROLE_USER));
+        user.setRoles(roles);
+        userRepository.save(user);
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setPassword(signupRequest.getPassword());
+        loginRequest.setUsername(signupRequest.getUsername());
+        return authenticateUser(loginRequest);
+    }
+
+
+    private Boolean isEmailAlreadyExists(RegistrationRequest registrationRequest) {
+        return userRepository.existsByEmail(registrationRequest.getEmail());
+    }
+
+    private Boolean isUserNameAlreadyExists(RegistrationRequest registrationRequest) {
+        return userRepository.existsByUsername(registrationRequest.getUsername());
+    }
 }

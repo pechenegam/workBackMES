@@ -3,8 +3,9 @@ package com.pet.demo.Specification;
 import com.pet.demo.entity.Team;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.OffsetDateTime;
 import java.util.Locale;
+
+import static java.util.Objects.requireNonNullElse;
 
 public class TeamSpec {
     public static Specification<Team> hasUnitName(String name) {
@@ -28,6 +29,7 @@ public class TeamSpec {
     }
 
     private static String getPatternLike(String name) {
+        name = requireNonNullElse(name, "");
         return "%" + name.toLowerCase(Locale.ROOT) + "%";
     }
 }

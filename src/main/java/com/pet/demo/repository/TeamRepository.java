@@ -15,6 +15,5 @@ public interface TeamRepository extends CrudRepository<Team, Long>, JpaSpecifica
 
     Optional<Team> findById(Long id);
 
-    List<Team> findAll();
 }
 
