@@ -4,7 +4,7 @@
 ```
 docker-compose up
 ```
-Запуск БД и проекта
+Запуск DB, API, Миграциий
 
 ____
 ## Users credentials in migration
@@ -29,6 +29,7 @@ ____
 | /api/v1/teams/{id} | authorized ADMIN | POST |
 | /api/v1/teams/update | authorized ADMIN | PUT |
 | /api/v1/teams/save | authorized ADMIN | POST |
+|  |  |  |
 | /api/v1/users | authorized users | PUT |
 | /api/v1/users/{id} | authorized ADMIN | GET |
 | /api/v1/users/{id} | authorized ADMIN | PUT |
